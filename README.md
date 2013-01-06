@@ -1,4 +1,4 @@
 Air-MindMaps
 ============
 
-Adobe air compatible version of MindMaps
+Adobe air and flex compatible version of David Richard's mindmaps - https://github.com/drichard/mindmaps
