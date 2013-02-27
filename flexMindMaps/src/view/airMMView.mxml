@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:parsley="http://www.spicefactory.org/parsley"
+		 width="100%" height="100%" 
+		 xmlns:context="org.spicefactory.parsley.dsl.context.*" creationComplete="init()"> 
+	
+	<!--Script~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+	<fx:Script> 
+		<![CDATA[
+			import mx.utils.Base64Decoder;
+			
+			import utils.Base64;
+			import utils.Utilities;
+			
+			[Inject]
+			[Bindable]
+			public var utilities:Utilities;
+			
+			
+			private var calledFromJSHandlerFunction:Function = getFileContents;
+			//public var html:HTMLLoader = new HTMLLoader();
+			
+			private function init():void{
+				html.addEventListener(Event.HTML_DOM_INITIALIZE, domInitialized);
+				html.location = "Main.html";
+			}
+			private function domInitialized(event:Event):void{
+				html.htmlLoader.window.calledFromJSHandlerFunction = calledFromJSHandlerFunction;
+			}
+			
+			
+			public function setDocument(filePath:String):void
+			{
+				var fileContent:String = getFileContents(filePath);
+				html.htmlLoader.window.setDocument(fileContent);
+			}
+			
+			/**Save the details of the Mindmap on the local disk*/
+			 public function saveDocument(filePath:String, fmName:String):void {
+				 //saving JSON object of MindMap.
+				 var jsonString:String = html.htmlLoader.window.getJSONString();
+				 utilities.saveFile(jsonString,filePath);
+				 
+				 //saving MindMap image.
+				var base64String:String = html.htmlLoader.window.getDocumentPNG(filePath);
+				var imageByteArray:ByteArray = Base64.decodeToByteArray(base64String);
+				var imagepath:String = filePath.substring(0,filePath.lastIndexOf(".json"));
+				imagepath = imagepath.replace('\\fm','\\export\\fm');
+				var fmIdxMatch:Array = imagepath.match(/\\[\d]\\/);
+				if (fmIdxMatch.length == 1) {
+				imagepath = imagepath.substring(0,fmIdxMatch.index+1)+fmName;
+				}	
+				
+				var file:File=File.desktopDirectory.resolvePath(imagepath + ".png");
+				var pstream:FileStream=new FileStream();
+				pstream.open(file, FileMode.WRITE);
+				pstream.writeBytes(imageByteArray);
+				pstream.close();
+			} 
+			
+			/**Open the mindmap details from the local disk */			
+		 public	function getFileContents(filePath:String):String { 
+				var ideaFileContents:String = "";
+				var fileStream:FileStream = new FileStream();
+				
+				var ideaFile:File = File.desktopDirectory.resolvePath(filePath);
+				
+				fileStream.open(ideaFile, FileMode.READ);
+				ideaFileContents = fileStream.readUTFBytes(fileStream.bytesAvailable);
+				fileStream.close();
+				
+				return ideaFileContents;
+			}
+			
+		]]> 
+	</fx:Script>
+	
+	<fx:Declarations />
+	
+	<mx:HTML id="html"
+			 width="100%"
+			 height="100%"/>
+				
+</s:Group>

@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html style="width:100%; height:100%; text-align:center; vertical-align:middle;">
+ <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+    
+    <script type="text/javascript" src="js/libs/jquery-1.6.1.min.js"></script>
+	<script type="text/javascript" src="js/libs/AIRAliases.js"></script>
+    <script type="text/javascript">
+    	/* Set document from the iframe sandbridge interface*/
+    	
+	 	 function setDocument(docContents){
+	  	  	  var childInterface=document.getElementById("pp_content_mm").contentWindow.childSandboxBridge;
+	    	  childInterface.setDocument(docContents);
+	       }
+    	
+    	var parentInterface = {};
+    	parentInterface.getFileContents = function(filePath) {
+    		alert("Inside Parent : " + filePath);
+			var fileContent = calledFromJSHandlerFunction(filePath);
+			
+			return fileContent;
+		};
+   		
+		function engageMMBridge(){ 
+		    document.getElementById("pp_content_mm").contentWindow.parentSandboxBridge = parentInterface; 
+		} 
+		
+		
+		
+		
+		function getJSONString() {
+			try {
+				var childInterface=document.getElementById("pp_content_mm").contentWindow.childSandboxBridge;
+				var fmData = childInterface.getDocument();
+				
+				return fmData;
+			}catch(e) {
+			alert(e);
+			}
+		}
+		
+		
+		function getDocumentPNG() {
+			try {
+				var childInterface=document.getElementById("pp_content_mm").contentWindow.childSandboxBridge;
+				var fmDataPNG = childInterface.getDocumentinPNG();
+				
+				fmDataPNG = fmDataPNG.replace(/^data:image\/(png|jpg);base64,/, ''); 
+				return fmDataPNG;
+			}catch(e) {
+			alert(e);
+			}
+		}
+		
+   	<!--Styles~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    	
+    </script>
+<!-- JS:LIB:BEGIN -->
+<script src="js/libs/jquery-ui-1.8.11.custom.min.js"></script>
+<script src="js/libs/dragscrollable.js"></script>
+<script src="js/libs/jquery.hotkeys.js"></script>
+<script src="js/libs/jquery.mousewheel.js"></script>
+<script src="js/libs/jquery.minicolors.js"></script>
+<script src="js/libs/jquery.tmpl.js"></script>
+<script src="js/libs/swfobject.js"></script>
+<script src="js/libs/downloadify.min.js"></script>
+<script src="js/libs/events.js"></script>
+
+<script src="js/MindMaps.js"></script>
+<script src="js/Command.js"></script>
+<script src="js/CommandRegistry.js"></script>
+<script src="js/Action.js"></script>
+<script src="js/Util.js"></script>
+<script src="js/Point.js"></script>
+<script src="js/Document.js"></script>
+<script src="js/MindMap.js"></script>
+<script src="js/Node.js"></script>
+<script src="js/NodeMap.js"></script>
+<script src="js/UndoManager.js"></script>
+<script src="js/UndoController.js"></script>
+<script src="js/ClipboardController.js"></script>
+<script src="js/ZoomController.js"></script>
+<script src="js/ShortcutController.js"></script>
+<script src="js/HelpController.js"></script>
+<script src="js/FloatPanel.js"></script>
+<script src="js/Navigator.js"></script>
+<script src="js/Inspector.js"></script>
+<script src="js/ToolBar.js"></script>
+<script src="js/StatusBar.js"></script>
+<script src="js/CanvasDrawingTools.js"></script>
+<script src="js/CanvasView.js"></script>
+<script src="js/CanvasPresenter.js"></script>
+<script src="js/ApplicationController.js"></script>
+<script src="js/MindMapModel.js"></script>
+<script src="js/NewDocument.js"></script>
+<script src="js/OpenDocument.js"></script>
+<script src="js/SaveDocument.js"></script>
+<script src="js/MainViewController.js"></script>
+<script src="js/Storage.js"></script>
+<script src="js/Event.js"></script>
+<script src="js/Notification.js"></script>
+<script src="js/StaticCanvas.js"></script>
+<script src="js/PrintController.js"></script>
+<script src="js/ExportMap.js"></script>
+<script src="js/AutoSaveController.js"></script>
+<script src="js/FilePicker.js"></script>
+
+<script src="js/libs/base64-binary.js"></script>
+<!-- JS:LIB:END -->
+
+</head>
+<body style="overflow: hidden">
+
+<iframe
+	src="http://air/index.html"
+	id="pp_content_mm" sandboxRoot="http://air/" documentRoot="app:/"
+	scrolling="no" width="99.5%" height="100%"
+	ondominitialize="engageMMBridge()"> </iframe>
+</body>
+</html>
